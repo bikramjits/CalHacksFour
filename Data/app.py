@@ -22,7 +22,10 @@ app = Flask(__name__)
 @app.route("/")
 def hello():
 #     return "Hello World!"
-    return article_search(request.args.get('term'), request.args.get('begin'), request.args.get('end'))
+    df_articles = article_search(request.args.get('term'), request.args.get('begin'), request.args.get('end'))
+    df_stock_data =
+    df_articles.join(df_stock_data, on=['Symbol', 'Date'])
+    return
 
 def article_extract(article):
     # art = article['response'][0]
