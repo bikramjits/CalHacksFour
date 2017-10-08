@@ -2,9 +2,12 @@ import websocket
 import threading
 import time
 import argparse
+import json
 
+data = []
 def on_message(ws, message):
-   print(message)
+   # print(message)
+   data.append(message)
 
 def on_error(ws, error):
    print(error)
@@ -18,6 +21,10 @@ def on_open(ws):
        time.sleep(1)
        ws.close()
    threading.Thread(target=run).start()
+
+# def stock_getter(): 
+#   run()
+
 
 def main():
    parser = argparse.ArgumentParser(description='gettin some market data')
@@ -40,6 +47,12 @@ def main():
                                    on_close = on_close)
        ws.on_open = on_open
        ws.run_forever()
+
+   print('Received {:d} messages'.format(len(data)))
+   for item in data:
+      json_data = json.loads(item)
+      print(json_data['Symbol'] + '---' + str(json_data['Close']))
+
 
 if __name__ == "__main__":
   main() 
